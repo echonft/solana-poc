@@ -1,12 +1,12 @@
 [package]
-name = "solana"
+name = "echo"
 version = "0.1.0"
-description = "Created with Anchor"
 edition = "2021"
+description = "Created with Anchor"
 
 [lib]
 crate-type = ["cdylib", "lib"]
-name = "solana"
+name = "echo"
 
 [features]
 no-entrypoint = []
