@@ -6,6 +6,8 @@ skip-lint = false
 
 [programs.localnet]
 echo = "251VpQ2e7acPSqM4m7DRoUMpfX9mEtFXHjbYRx2C5JGX"
+[programs.devnet]
+echo = "251VpQ2e7acPSqM4m7DRoUMpfX9mEtFXHjbYRx2C5JGX"
 
 [registry]
 url = "https://api.apr.dev"

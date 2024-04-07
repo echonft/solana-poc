@@ -1,6 +1,9 @@
 {
   "scripts": {
-    "generate-client": "solita",
+    "anchor:deploy": "anchor build && anchor deploy",
+    "generate-client": "node kinobi",
+    "sdk:deploy": "pnpm sdk:update && pnpm anchor:deploy",
+    "sdk:update": "anchor build && node kinobi && source .env && rm -rf ${PROJECTS_DIR}/echo/lib/solana/src/types/sdk && cp -R target/sdk ${PROJECTS_DIR}/echo/lib/solana/src/types/",
     "lint:fix": "prettier */*.js \"*/**/*{.js,.ts}\" -w",
     "lint": "prettier */*.js \"*/**/*{.js,.ts}\" --check"
   },
@@ -8,6 +11,7 @@
     "@coral-xyz/anchor": "^0.29.0"
   },
   "devDependencies": {
+    "@metaplex-foundation/kinobi": "0.18.2",
     "@metaplex-foundation/solita": "0.20.1",
     "chai": "^4.3.4",
     "mocha": "^9.0.3",
