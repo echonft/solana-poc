@@ -14,48 +14,38 @@ pub mod echo {
     }
 
     pub fn delegate_and_lock(ctx: Context<DelegateAndLock>) -> Result<()> {
-
-        let metadata_program = ctx.accounts.metadata_program.to_account_info();
-        let delegate = ctx.accounts.delegate.to_account_info();
-        let metadata = ctx.accounts.metadata.to_account_info();
-        let mint = ctx.accounts.mint.to_account_info();
-        let token = ctx.accounts.token.to_account_info();
-        let authority = ctx.accounts.authority.to_account_info();
-        let spl_token_program = ctx.accounts.spl_token_program.to_account_info();
-        let system_program = ctx.accounts.system_program.to_account_info();
-        let sysvar = ctx.accounts.sysvar_instructions.to_account_info();
-        ctx.accounts.delegate.mint = mint.key();
-        ctx.accounts.delegate.authority = authority.key();
+        ctx.accounts.delegate.mint =  ctx.accounts.mint.key();
+        ctx.accounts.delegate.authority = ctx.accounts.authority.key();
         ctx.accounts.delegate.bump = ctx.bumps.delegate;
 
 
         msg!("Calling the token program to approve PDA...");
-        let delegate_result = approve(CpiContext::new_with_signer(ctx.accounts.spl_token_program.to_account_info(), Approve {
+        let delegate_result = approve(CpiContext::new(ctx.accounts.spl_token_program.to_account_info(), Approve {
             to: ctx.accounts.token.to_account_info(),
             authority: ctx.accounts.authority.to_account_info(),
             delegate: ctx.accounts.delegate.to_account_info(),
-        }, &[&[authority.key().as_ref()]]), 1);
+        }), 1);
 
         if delegate_result.is_err() {
             return err!(EchoError::DelegateError);
         }
 
-        let lock_result = freeze_account(CpiContext::new_with_signer(ctx.accounts.spl_token_program.to_account_info(), FreezeAccount {
-            authority: ctx.accounts.metadata.to_account_info(),
-            mint: ctx.accounts.mint.to_account_info(),
-            account: ctx.accounts.token.to_account_info(),
-        }, &[&[
-                    b"echo-delegate",
-                    ctx.accounts.authority.key().as_ref(),
-                    ctx.accounts.mint.key().as_ref(),
-                    &[ctx.bumps.delegate],
-                ]]));
-
-
-        if lock_result.is_err() {
-            return err!(EchoError::LockError);
-        }
-        msg!("lock done");
+        // let lock_result = freeze_account(CpiContext::new_with_signer(ctx.accounts.spl_token_program.to_account_info(), FreezeAccount {
+        //     authority: ctx.accounts.metadata.to_account_info(),
+        //     mint: ctx.accounts.mint.to_account_info(),
+        //     account: ctx.accounts.token.to_account_info(),
+        // }, &[&[
+        //             b"echo-delegate",
+        //             ctx.accounts.authority.key().as_ref(),
+        //             ctx.accounts.mint.key().as_ref(),
+        //             &[ctx.bumps.delegate],
+        //         ]]));
+        //
+        //
+        // if lock_result.is_err() {
+        //     return err!(EchoError::LockError);
+        // }
+        // msg!("lock done");
         Ok(())
     }
 
