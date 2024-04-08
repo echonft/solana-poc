@@ -7,14 +7,14 @@ skip-lint = false
 [programs.localnet]
 echo = "251VpQ2e7acPSqM4m7DRoUMpfX9mEtFXHjbYRx2C5JGX"
 [programs.devnet]
-echo = "251VpQ2e7acPSqM4m7DRoUMpfX9mEtFXHjbYRx2C5JGX"
+echo = "9YimkcCy3hXuMkCRU2CHbWGZTpKF4o4zLCkpSpGANfDN"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "localnet"
-wallet = "/Users/johnnycage/.config/solana/id.json"
+cluster = "devnet"
+wallet = "~/.config/solana/id.json"
 
 [scripts]
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
