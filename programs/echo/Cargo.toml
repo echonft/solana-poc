@@ -9,12 +9,18 @@ crate-type = ["cdylib", "lib"]
 name = "echo"
 
 [features]
+default = ["devnet"]
+mainnet = ["wormhole-anchor-sdk/mainnet"]
+testnet = ["wormhole-anchor-sdk/solana-devnet"]
+devnet = ["wormhole-anchor-sdk/tilt-devnet"]
 no-entrypoint = []
 no-idl = []
 no-log-ix-name = []
 cpi = ["no-entrypoint"]
-default = []
 
 [dependencies]
-anchor-lang = { version = "0.29.0", features = ["init-if-needed"] }
-anchor-spl = "0.29.0"
+solana-program = "1.18.9"
+anchor-lang = { version = "0.29.0", features = ["init-if-needed"]}
+mpl-token-metadata = "4.1.2"
+wormhole-anchor-sdk = { version = "0.29.0-alpha.1", default-features = false }
+
