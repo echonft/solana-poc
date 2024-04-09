@@ -5,15 +5,15 @@ seeds = false
 skip-lint = false
 
 [programs.localnet]
-echo = "251VpQ2e7acPSqM4m7DRoUMpfX9mEtFXHjbYRx2C5JGX"
+echo = "Gzq13nAmkDZMgFjKs8Zd6jJbXE2X6iJJ4FEe2BqWcVWM"
 [programs.devnet]
-echo = "9YimkcCy3hXuMkCRU2CHbWGZTpKF4o4zLCkpSpGANfDN"
+echo = "Gzq13nAmkDZMgFjKs8Zd6jJbXE2X6iJJ4FEe2BqWcVWM"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "devnet"
+cluster = "localnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]

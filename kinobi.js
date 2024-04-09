@@ -12,7 +12,7 @@ const kinobi = createFromIdls([
 kinobi.update(
   updateProgramsVisitor({
     "echo": {
-      publicKey: "9YimkcCy3hXuMkCRU2CHbWGZTpKF4o4zLCkpSpGANfDN",
+      publicKey: "Gzq13nAmkDZMgFjKs8Zd6jJbXE2X6iJJ4FEe2BqWcVWM",
       origin: "anchor",
     },
   }),
