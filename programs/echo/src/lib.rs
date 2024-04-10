@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 use anchor_spl::associated_token::{AssociatedToken, ID as SPL_ASSOCIATED_TOKEN_PROGRAM_ID};
-use anchor_spl::token::spl_token::{instruction::AuthorityType, ID as SPL_TOKEN_PROGRAM_ID};
+use anchor_spl::token::spl_token::ID as SPL_TOKEN_PROGRAM_ID;
 use anchor_spl::token::{transfer, Mint, Token, TokenAccount, Transfer};
 
 declare_id!("Gzq13nAmkDZMgFjKs8Zd6jJbXE2X6iJJ4FEe2BqWcVWM");
@@ -19,25 +19,24 @@ pub mod echo {
         offer.receiver_token_mint = ctx.accounts.receiver_token_mint.key();
         offer.state = OfferState::OPEN;
         offer.bump = ctx.bumps.offer;
-        msg!("offer data set");
 
         let escrow = &mut ctx.accounts.escrow;
         escrow.owner = ctx.accounts.sender.key();
         escrow.mint = ctx.accounts.token_mint.key();
         escrow.offer = ctx.accounts.offer.key();
+
         escrow.bump = ctx.bumps.escrow;
-        msg!("escrow data set");
 
         transfer(
             CpiContext::new(
                 ctx.accounts.spl_token_program.to_account_info(),
                 Transfer {
-                    authority: ctx.accounts.sender.to_account_info(),
                     from: ctx.accounts.token.to_account_info(),
                     to: ctx
                         .accounts
                         .escrow_associated_token_account
                         .to_account_info(),
+                    authority: ctx.accounts.sender.to_account_info(),
                 },
             ),
             1,
@@ -49,41 +48,48 @@ pub mod echo {
     }
 
     pub fn accept_offer(ctx: Context<AcceptOfferAccounts>) -> Result<()> {
-        // TODO assert offer is not expired
-        // FIXME use transfer
-        // transfer the token from sender escrow -> receiver
-        // set_authority(
-        //     CpiContext::new_with_signer(
-        //         ctx.accounts.spl_token_program.to_account_info(),
-        //         SetAuthority {
-        //             account_or_mint: ctx.accounts.sender_token_mint.to_account_info(),
-        //             current_authority: ctx.accounts.sender_escrow.to_account_info(),
-        //         },
-        //         &[&[
-        //             b"escrow",
-        //             ctx.accounts.sender.key().as_ref(),
-        //             ctx.accounts.sender_token_mint.key().as_ref(),
-        //             &[ctx.accounts.sender_escrow.bump],
-        //         ]],
-        //     ),
-        //     AuthorityType::AccountOwner,
-        //     Some(ctx.accounts.receiver.key()),
-        // )
-        // .unwrap();
-        // // transfer the token from receiver -> sender
-        // set_authority(
-        //     CpiContext::new(
-        //         ctx.accounts.spl_token_program.to_account_info(),
-        //         SetAuthority {
-        //             account_or_mint: ctx.accounts.token_mint.to_account_info(),
-        //             current_authority: ctx.accounts.receiver.to_account_info(),
-        //         },
-        //     ),
-        //     AuthorityType::AccountOwner,
-        //     Some(ctx.accounts.sender.key()),
-        // )
-        // .unwrap();
+        // TODO Assert offer data
 
+        // transfer the token from sender escrow -> receiver
+        transfer(
+            CpiContext::new_with_signer(
+                ctx.accounts.spl_token_program.to_account_info(),
+                Transfer {
+                    from: ctx
+                        .accounts
+                        .sender_escrow_associated_token_account
+                        .to_account_info(),
+                    to: ctx.accounts.asociated_token_account.to_account_info(),
+                    authority: ctx.accounts.sender_escrow.to_account_info(),
+                },
+                &[&[
+                    b"escrow",
+                    ctx.accounts.sender.key().as_ref(),
+                    ctx.accounts.sender_token_mint.key().as_ref(),
+                    &[ctx.accounts.sender_escrow.bump],
+                ]],
+            ),
+            1,
+        )
+        .unwrap();
+        // transfer the token from receiver -> sender
+        transfer(
+            CpiContext::new(
+                ctx.accounts.spl_token_program.to_account_info(),
+                Transfer {
+                    from: ctx.accounts.token.to_account_info(),
+                    to: ctx
+                        .accounts
+                        .sender_associated_token_account
+                        .to_account_info(),
+                    authority: ctx.accounts.receiver.to_account_info(),
+                },
+            ),
+            1,
+        )
+        .unwrap();
+
+        // TODO Close sender_associated_token_account
         Ok(())
     }
 }
@@ -124,40 +130,39 @@ pub struct CreateOfferAccounts<'info> {
     token::mint = token_mint,
     token::authority = sender
     )]
-    pub token: Account<'info, TokenAccount>,
-    pub token_mint: Account<'info, Mint>,
-    #[account(
-    init,
+    pub token: Box<Account<'info, TokenAccount>>,
+    pub token_mint: Box<Account<'info, Mint>>,
+    #[account(init,
     payer = sender,
     space = 8 + 32 + 32 + 32 + 1,
     seeds = [b"escrow", sender.key().as_ref(), token_mint.key().as_ref()],
     bump
     )]
-    pub escrow: Account<'info, EscrowAuthority>,
+    pub escrow: Box<Account<'info, EscrowAuthority>>,
     #[account(init,
     payer = sender,
     associated_token::mint = token_mint,
     associated_token::authority = escrow,
-    associated_token::token_program = associated_token_program
+    associated_token::token_program = spl_token_program
     )]
-    pub escrow_associated_token_account: Account<'info, TokenAccount>,
-    // TODO get a better seed: with a nonce (possibly # of offers created?)
-    #[account(
-    init,
-    payer = sender,
-    space = 8 + 32 + 32 + 32 + 32 + 1 + 1,
-    seeds = [b"offer", sender.key().as_ref(), token_mint.key().as_ref()],
-    bump
-    )]
-    pub offer: Account<'info, Offer>,
+    pub escrow_associated_token_account: Box<Account<'info, TokenAccount>>,
     /// CHECK: This is not dangerous because we're not writing or reading from this account
     pub receiver: UncheckedAccount<'info>,
     #[account(
     token::mint = receiver_token_mint,
     token::authority = receiver
     )]
-    pub receiver_token: Account<'info, TokenAccount>,
-    pub receiver_token_mint: Account<'info, Mint>,
+    pub receiver_token: Box<Account<'info, TokenAccount>>,
+    pub receiver_token_mint: Box<Account<'info, Mint>>,
+    // TODO Modify seed, too limitative as of now
+    #[account(
+    init,
+    payer = sender,
+    space = 8 + 32 + 32 + 32 + 32 + 1 + 1,
+    seeds = [b"offer", sender.key().as_ref(), receiver.key().as_ref()],
+    bump
+    )]
+    pub offer: Box<Account<'info, Offer>>,
     #[account(address = SPL_TOKEN_PROGRAM_ID)]
     pub spl_token_program: Program<'info, Token>,
     #[account(address = SPL_ASSOCIATED_TOKEN_PROGRAM_ID)]
@@ -169,37 +174,50 @@ pub struct CreateOfferAccounts<'info> {
 pub struct AcceptOfferAccounts<'info> {
     #[account(mut)]
     pub receiver: Signer<'info>,
-    #[account(
+    #[account(mut,
     token::mint = token_mint,
     token::authority = receiver
     )]
-    pub token: Account<'info, TokenAccount>,
-    pub token_mint: Account<'info, Mint>,
-    // TODO get a better seed: with a nonce (possibly # of offers created?)
-    #[account(mut,
-    close = sender,
-    seeds = [b"offer", sender.key().as_ref(), sender_token_mint.key().as_ref()],
-    bump
+    pub token: Box<Account<'info, TokenAccount>>,
+    pub token_mint: Box<Account<'info, Mint>>,
+    #[account(init_if_needed,
+    payer = receiver,
+    associated_token::mint = sender_token_mint,
+    associated_token::authority = receiver,
+    associated_token::token_program = spl_token_program
     )]
-    pub offer: Account<'info, Offer>,
-    /// CHECK: This is not dangerous because we're checking the address from the offer
-    #[account(mut,
-    address = offer.sender.key())]
+    pub asociated_token_account: Box<Account<'info, TokenAccount>>,
+    /// CHECK: This is not dangerous because we're not writing or reading from this account
+    #[account(mut)]
     pub sender: UncheckedAccount<'info>,
     #[account(mut,
     close = sender,
     seeds = [b"escrow", sender.key().as_ref(), sender_token_mint.key().as_ref()],
     bump
     )]
-    pub sender_escrow: Account<'info, EscrowAuthority>,
+    pub sender_escrow: Box<Account<'info, EscrowAuthority>>,
     #[account(mut,
-    close = sender,
     associated_token::mint = sender_token_mint,
     associated_token::authority = sender_escrow
     )]
-    pub sender_escrow_token_account: Account<'info, EscrowAuthority>,
-    pub sender_token_mint: Account<'info, Mint>,
+    pub sender_escrow_associated_token_account: Box<Account<'info, TokenAccount>>,
+    pub sender_token_mint: Box<Account<'info, Mint>>,
+    #[account(init_if_needed,
+    payer = receiver,
+    associated_token::mint = token_mint,
+    associated_token::authority = sender,
+    associated_token::token_program = spl_token_program
+    )]
+    pub sender_associated_token_account: Box<Account<'info, TokenAccount>>,
+    #[account(mut,
+    close = sender,
+    seeds = [b"offer", sender.key().as_ref(), receiver.key().as_ref()],
+    bump
+    )]
+    pub offer: Box<Account<'info, Offer>>,
     #[account(address = SPL_TOKEN_PROGRAM_ID)]
     pub spl_token_program: Program<'info, Token>,
+    #[account(address = SPL_ASSOCIATED_TOKEN_PROGRAM_ID)]
+    pub associated_token_program: Program<'info, AssociatedToken>,
     pub system_program: Program<'info, System>,
 }
