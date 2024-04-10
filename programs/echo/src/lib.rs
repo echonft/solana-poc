@@ -3,6 +3,8 @@ use anchor_spl::associated_token::{AssociatedToken, ID as SPL_ASSOCIATED_TOKEN_P
 use anchor_spl::token::spl_token::ID as SPL_TOKEN_PROGRAM_ID;
 use anchor_spl::token::{transfer, Mint, Token, TokenAccount, Transfer};
 
+mod state;
+
 declare_id!("Gzq13nAmkDZMgFjKs8Zd6jJbXE2X6iJJ4FEe2BqWcVWM");
 
 #[program]
