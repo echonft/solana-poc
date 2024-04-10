@@ -1,13 +1,12 @@
-[workspace]
 [package]
-name = "echo-crosschain"
+name = "echo_crosschain"
 version = "0.1.0"
 edition = "2021"
-description = "echo-crosschain"
+description = "echo_crosschain"
 
 [lib]
 crate-type = ["cdylib", "lib"]
-name = "echo-crosschain"
+name = "echo_crosschain"
 
 [features]
 default = ["devnet"]

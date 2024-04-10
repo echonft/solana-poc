@@ -1,13 +1,16 @@
-mod account;
-mod contexts;
-use crate::contexts::{AcceptOfferAccounts, CreateOfferAccounts, Initialize};
+pub use account::*;
 use anchor_lang::prelude::*;
 use anchor_spl::token::{transfer, Transfer};
+pub use contexts::*;
+
+pub mod account;
+pub mod contexts;
+
+declare_id!("Gzq13nAmkDZMgFjKs8Zd6jJbXE2X6iJJ4FEe2BqWcVWM");
 
 #[program]
 pub mod echo {
     use super::*;
-    use crate::contexts::{AcceptOfferAccounts, CreateOfferAccounts, OfferState};
     pub fn initialize(_ctx: Context<Initialize>) -> Result<()> {
         Ok(())
     }
