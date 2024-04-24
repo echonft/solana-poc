@@ -1,20 +1,16 @@
+use crate::MESSAGE_MAX_LENGTH;
 use anchor_lang::{prelude::Pubkey, AnchorDeserialize, AnchorSerialize};
 use std::io;
 use std::io::Read;
 
 const PAYLOAD_ID_ALIVE: u8 = 0;
-const PAYLOAD_ID_HELLO: u8 = 1;
-
-pub const MESSAGE_MAX_LENGTH: usize = 512;
+const PAYLOAD_ID_OFFER_CREATED: u8 = 1;
+const PAYLOAD_ID_OFFER_ACCEPTED: u8 = 2;
+const PAYLOAD_ID_SWAP_EXECUTED: u8 = 3;
 
 #[derive(Clone)]
-/// Expected message types for this program. Only valid payloads are:
 /// * `Alive`: Payload ID == 0. Emitted when [`initialize`](crate::initialize)
 ///  is called).
-/// * `Hello`: Payload ID == 1. Emitted when
-/// [`send_message`](crate::send_message) is called).
-///
-/// Payload IDs are encoded as u8.
 pub enum Message {
     Alive { program_id: Pubkey },
     Hello { message: Vec<u8> },
@@ -34,7 +30,7 @@ impl AnchorSerialize for Message {
                         format!("message exceeds {MESSAGE_MAX_LENGTH} bytes"),
                     ))
                 } else {
-                    PAYLOAD_ID_HELLO.serialize(writer)?;
+                    PAYLOAD_ID_OFFER_CREATED.serialize(writer)?;
                     (message.len() as u16).to_be_bytes().serialize(writer)?;
                     for item in message {
                         item.serialize(writer)?;
@@ -47,15 +43,16 @@ impl AnchorSerialize for Message {
 }
 
 impl AnchorDeserialize for Message {
-    fn deserialize(buf: &mut &[u8]) -> io::Result<Self> {
-        match buf[0] {
+    fn deserialize_reader<R: Read>(reader: &mut R) -> io::Result<Self> {
+        let message: Vec<u8> = AnchorDeserialize::deserialize_reader(reader)?;
+        match message[0] {
             PAYLOAD_ID_ALIVE => Ok(Message::Alive {
-                program_id: Pubkey::try_from(&buf[1..33]).unwrap(),
+                program_id: Pubkey::try_from(&message[1..33]).unwrap(),
             }),
-            PAYLOAD_ID_HELLO => {
+            PAYLOAD_ID_OFFER_CREATED => {
                 let length = {
                     let mut out = [0u8; 2];
-                    out.copy_from_slice(&buf[1..3]);
+                    out.copy_from_slice(&message[1..3]);
                     u16::from_be_bytes(out) as usize
                 };
                 if length > MESSAGE_MAX_LENGTH {
@@ -65,7 +62,7 @@ impl AnchorDeserialize for Message {
                     ))
                 } else {
                     Ok(Message::Hello {
-                        message: buf[3..(3 + length)].to_vec(),
+                        message: message[3..(3 + length)].to_vec(),
                     })
                 }
             }
@@ -74,9 +71,6 @@ impl AnchorDeserialize for Message {
                 "invalid payload ID",
             )),
         }
-    }
-    fn deserialize_reader<R: Read>(reader: &mut R) -> io::Result<Self> {
-        return self::Message::deserialize(reader);
     }
 }
 
@@ -135,7 +129,7 @@ pub mod test {
         );
 
         // Verify Payload ID.
-        assert_eq!(encoded[0], PAYLOAD_ID_HELLO);
+        assert_eq!(encoded[0], PAYLOAD_ID_OFFER_CREATED);
 
         // Verify message length.
         let mut message_len_bytes = [0u8; 2];
@@ -183,7 +177,7 @@ pub mod test {
         };
 
         // Serialize manually and then attempt to deserialize.
-        encoded.push(PAYLOAD_ID_HELLO);
+        encoded.push(PAYLOAD_ID_OFFER_CREATED);
         encoded.extend_from_slice(&(raw_message.len() as u16).to_be_bytes());
         encoded.extend_from_slice(raw_message.as_bytes());
 
@@ -193,7 +187,7 @@ pub mod test {
         );
 
         // Verify Payload ID.
-        assert_eq!(encoded[0], PAYLOAD_ID_HELLO);
+        assert_eq!(encoded[0], PAYLOAD_ID_OFFER_CREATED);
 
         // Verify message length.
         let mut message_len_bytes = [0u8; 2];

@@ -1,7 +1,7 @@
 use anchor_lang::prelude::error_code;
 
 #[error_code]
-pub enum EchoCrosschainError {
+pub enum EchoError {
     #[msg("InvalidWormholeConfig")]
     /// Specified Wormhole bridge data PDA is wrong.
     InvalidWormholeConfig,

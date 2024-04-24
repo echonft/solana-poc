@@ -1,13 +1,6 @@
-use crate::contexts::OfferState;
+use crate::enums::offer_state::OfferState;
 use anchor_lang::prelude::*;
-
-#[account]
-pub struct EscrowAuthority {
-    pub owner: Pubkey,
-    pub mint: Pubkey,
-    pub offer: Pubkey,
-    pub bump: u8,
-}
+use anchor_lang::solana_program::pubkey::Pubkey;
 
 #[account]
 pub struct Offer {
@@ -18,10 +11,4 @@ pub struct Offer {
     pub state: OfferState,
     // TODO add expiration date
     pub bump: u8,
-}
-
-#[account]
-pub struct CrossChainOffer {
-    pub offer: Offer,
-    pub id: String,
 }
