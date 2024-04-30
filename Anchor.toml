@@ -6,10 +6,8 @@ skip-lint = false
 
 [programs.localnet]
 echo = "Gzq13nAmkDZMgFjKs8Zd6jJbXE2X6iJJ4FEe2BqWcVWM"
-echo_crosschain = "FPJtzVRzQmKc1eNBCr2FzBT5UDX7b7TrRoaY59gVUE8h"
 [programs.devnet]
 echo = "Gzq13nAmkDZMgFjKs8Zd6jJbXE2X6iJJ4FEe2BqWcVWM"
-echo_crosschain = "FPJtzVRzQmKc1eNBCr2FzBT5UDX7b7TrRoaY59gVUE8h"
 
 [registry]
 url = "https://api.apr.dev"
@@ -31,7 +29,6 @@ url = "https://api.mainnet-beta.solana.com"
 resolver = "2"
 members = [
   "programs/echo",
-  "programs/echo_crosschain",
 ]
 
 ### MPL Token Metadata

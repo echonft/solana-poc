@@ -1,8 +1,7 @@
 use crate::{
     constants::SEED_PREFIX_SENT,
     error::EchoError,
-    message::Message,
-    state::{Config, ForeignEmitter, Received, WormholeEmitter},
+    program_accounts::{Config, ForeignEmitter, Received, WormholeEmitter},
 };
 use anchor_lang::prelude::*;
 use wormhole_anchor_sdk::wormhole;
@@ -59,7 +58,7 @@ pub struct SendMessageContext<'info> {
     mut,
     seeds = [
     SEED_PREFIX_SENT,
-    &wormhole_sequence.next_value().to_le_bytes()[..]
+    &wormhole_sequence.next_value().to_be_bytes()[..]
     ],
     bump,
     )]

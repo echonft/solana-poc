@@ -1,7 +1,7 @@
 use crate::{
     error::EchoError,
     message::Message,
-    state::{Config, ForeignEmitter, Received, WormholeEmitter},
+    program_accounts::{Config, ForeignEmitter, Received, WormholeEmitter},
 };
 use anchor_lang::prelude::*;
 use wormhole_anchor_sdk::wormhole;
@@ -28,7 +28,7 @@ pub struct RegisterEmitterContext<'info> {
     payer = owner,
     seeds = [
     ForeignEmitter::SEED_PREFIX,
-    &chain.to_le_bytes()[..]
+    &chain.to_be_bytes()[..]
     ],
     bump,
     space = ForeignEmitter::MAXIMUM_SIZE

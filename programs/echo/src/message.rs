@@ -6,7 +6,7 @@ use std::io::Read;
 const PAYLOAD_ID_ALIVE: u8 = 0;
 const PAYLOAD_ID_OFFER_CREATED: u8 = 1;
 const PAYLOAD_ID_OFFER_ACCEPTED: u8 = 2;
-const PAYLOAD_ID_SWAP_EXECUTED: u8 = 3;
+const PAYLOAD_ID_OFFER_CANCELED: u8 = 3;
 
 #[derive(Clone)]
 /// * `Alive`: Payload ID == 0. Emitted when [`initialize`](crate::initialize)

@@ -1,7 +1,7 @@
 use crate::{
     error::EchoError,
     message::Message,
-    state::{Config, ForeignEmitter, Received, WormholeEmitter},
+    program_accounts::{Config, ForeignEmitter, Received, WormholeEmitter},
 };
 use anchor_lang::prelude::*;
 use wormhole_anchor_sdk::wormhole;
@@ -39,7 +39,7 @@ pub struct ReceiveMessageContext<'info> {
     #[account(
     seeds = [
     ForeignEmitter::SEED_PREFIX,
-    &posted.emitter_chain().to_le_bytes()[..]
+    &posted.emitter_chain().to_be_bytes()[..]
     ],
     bump,
     constraint = foreign_emitter.verify(posted.emitter_address()) @ EchoError::InvalidForeignEmitter
@@ -54,8 +54,8 @@ pub struct ReceiveMessageContext<'info> {
     payer = payer,
     seeds = [
     Received::SEED_PREFIX,
-    &posted.emitter_chain().to_le_bytes()[..],
-    &posted.sequence().to_le_bytes()[..]
+    &posted.emitter_chain().to_be_bytes()[..],
+    &posted.sequence().to_be_bytes()[..]
     ],
     bump,
     space = Received::MAXIMUM_SIZE
