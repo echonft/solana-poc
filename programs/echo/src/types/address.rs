@@ -154,4 +154,49 @@ mod tests {
         // Ensure an error is returned due to invalid size
         assert!(result.is_err());
     }
+
+    #[test]
+    fn test_address_serialization_invalid_chain_id() {
+        // Create an Address instance with a Solana address
+        let solana_address = Pubkey::new_unique();
+        let address = Address {
+            chain_id: 3,
+            solana_address: Some(solana_address),
+            eth_address: None,
+        };
+
+        // Serialize the Address instance
+        let mut buffer = Cursor::new(vec![0; ADDRESS_SERIALIZED_SIZE]);
+        let result = address.serialize(&mut buffer);
+
+        // Ensure an error is returned due to invalid size
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_address_deserialization_invalid_chain_id() {
+        // Create an Address instance with a Solana address
+        let solana_address = Pubkey::new_unique();
+        let address = Address {
+            chain_id: CHAIN_ID_SOLANA,
+            solana_address: Some(solana_address),
+            eth_address: None,
+        };
+
+        // Serialize the Address instance
+        let mut buffer = Cursor::new(vec![0; ADDRESS_SERIALIZED_SIZE]);
+        address.serialize(&mut buffer).unwrap();
+
+        // Overwrite chain ID with wrong data
+        buffer.set_position(0);
+        let wrong_chain_id:u16 = 3;
+        buffer.write(&wrong_chain_id.to_be_bytes()).unwrap();
+
+        // Deserialize the serialized data
+        buffer.set_position(0);
+        let deserialized_address = Address::deserialize_reader(&mut buffer);
+
+        // Ensure an error is returned due to invalid size
+        assert!(deserialized_address.is_err());
+    }
 }
