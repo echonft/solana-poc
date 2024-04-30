@@ -82,3 +82,76 @@ impl AnchorDeserialize for Address {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::io::{Cursor};
+
+    #[test]
+    fn test_address_serialization_deserialization_solana() {
+        // Create an Address instance with a Solana address
+        let solana_address = Pubkey::new_unique();
+        let address = Address {
+            chain_id: CHAIN_ID_SOLANA,
+            solana_address: Some(solana_address),
+            eth_address: None,
+        };
+
+        // Serialize the Address instance
+        let mut buffer = Cursor::new(vec![0; ADDRESS_SERIALIZED_SIZE]);
+        address.serialize(&mut buffer).unwrap();
+
+        // Deserialize the serialized data
+        buffer.set_position(0);
+        let deserialized_address = Address::deserialize_reader(&mut buffer).unwrap();
+
+        // Ensure deserialized Address matches the original one
+        assert_eq!(deserialized_address.chain_id, address.chain_id);
+        assert_eq!(
+            deserialized_address.solana_address.unwrap(),
+            address.solana_address.unwrap()
+        );
+        assert_eq!(deserialized_address.eth_address, None);
+    }
+
+    #[test]
+    fn test_address_serialization_deserialization_ethereum() {
+        // Create an Address instance with an Ethereum address
+        let eth_address = H160::random();
+        let address = Address {
+            chain_id: 2,
+            solana_address: None,
+            eth_address: Some(eth_address),
+        };
+
+        // Serialize the Address instance
+        let mut buffer = Cursor::new(vec![0; ADDRESS_SERIALIZED_SIZE]);
+        address.serialize(&mut buffer).unwrap();
+
+        // Deserialize the serialized data
+        buffer.set_position(0);
+        let deserialized_address = Address::deserialize_reader(&mut buffer).unwrap();
+
+        // Ensure deserialized Address matches the original one
+        assert_eq!(deserialized_address.chain_id, address.chain_id);
+        assert_eq!(deserialized_address.solana_address, None);
+        assert_eq!(
+            deserialized_address.eth_address.unwrap(),
+            address.eth_address.unwrap()
+        );
+    }
+
+    #[test]
+    fn test_address_deserialization_invalid_size() {
+        // Create a serialized Address data with an invalid size
+        let serialized_data = vec![0; ADDRESS_SERIALIZED_SIZE - 1];
+
+        // Deserialize the invalid serialized data
+        let mut buffer = Cursor::new(serialized_data);
+        let result = Address::deserialize_reader(&mut buffer);
+
+        // Ensure an error is returned due to invalid size
+        assert!(result.is_err());
+    }
+}
