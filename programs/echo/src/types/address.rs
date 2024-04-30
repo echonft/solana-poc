@@ -4,7 +4,7 @@ use std::io;
 use std::io::{Read, Write};
 use wormhole_anchor_sdk::wormhole::constants::CHAIN_ID_SOLANA;
 
-#[derive(Clone)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Address {
     pub chain_id: u16,
     pub solana_address: Option<Pubkey>,
@@ -46,7 +46,7 @@ impl AnchorSerialize for Address {
 impl AnchorDeserialize for Address {
     fn deserialize_reader<R: Read>(reader: &mut R) -> io::Result<Self> {
         let mut data = [0; ADDRESS_SERIALIZED_SIZE];
-        let size = reader.read(&mut data).unwrap();
+        let size = reader.read(&mut data)?;
         if size != ADDRESS_SERIALIZED_SIZE {
             return Err(io::Error::new(
                 io::ErrorKind::InvalidInput,
@@ -54,11 +54,11 @@ impl AnchorDeserialize for Address {
             ));
         }
         let mut buffer = [0; 2];
-        buffer.copy_from_slice(&data[0..1]);
+        buffer.copy_from_slice(&data[0..2]);
         let chain_id = u16::from_be_bytes(buffer);
         match chain_id {
             CHAIN_ID_SOLANA => {
-                let address = Pubkey::try_from_slice(&data[2..]).unwrap();
+                let address = Pubkey::try_from_slice(&data[2..])?;
                 Ok(Address {
                     chain_id,
                     solana_address: Some(address),

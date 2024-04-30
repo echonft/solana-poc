@@ -44,8 +44,7 @@ impl AnchorDeserialize for OfferItems {
         for item_index in 0..count {
             let item = OfferItem::try_from_slice(
                 &data[1 + item_index as usize..OFFER_ITEM_SERIALIZED_SIZE * item_index as usize],
-            )
-            .unwrap();
+            )?;
             items.push(item)
         }
         Ok(OfferItems { count, items })

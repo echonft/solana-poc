@@ -24,26 +24,27 @@ impl AnchorSerialize for OfferCreatedMessage {
     }
 }
 
+// TODO better code
 impl AnchorDeserialize for OfferCreatedMessage {
     fn deserialize_reader<R: Read>(reader: &mut R) -> io::Result<Self> {
         let mut data = Vec::new();
         reader.read_to_end(&mut data)?;
         let mut start_index = 0;
-        let mut end_index = 31;
+        let mut end_index = 32;
         let mut id = [0; 32];
         id.copy_from_slice(&data[start_index..end_index]);
         start_index = end_index + 1;
         end_index += ADDRESS_SERIALIZED_SIZE;
-        let sender = Address::try_from_slice(&data[start_index..end_index]).unwrap();
+        let sender = Address::try_from_slice(&data[start_index..end_index])?;
         start_index = end_index + 1;
         end_index += ADDRESS_SERIALIZED_SIZE;
-        let receiver = Address::try_from_slice(&data[start_index..end_index]).unwrap();
+        let receiver = Address::try_from_slice(&data[start_index..end_index])?;
         start_index = end_index + 1;
         end_index += data[start_index] as usize * OFFER_ITEM_SERIALIZED_SIZE;
-        let sender_items = OfferItems::try_from_slice(&data[start_index..end_index]).unwrap();
+        let sender_items = OfferItems::try_from_slice(&data[start_index..end_index])?;
         start_index = end_index + 1;
         end_index += data[start_index] as usize * OFFER_ITEM_SERIALIZED_SIZE;
-        let receiver_items = OfferItems::try_from_slice(&data[start_index..end_index]).unwrap();
+        let receiver_items = OfferItems::try_from_slice(&data[start_index..end_index])?;
         start_index = end_index + 1;
         let mut expiration_buffer = [0; 8];
         expiration_buffer.copy_from_slice(&data[start_index..]);

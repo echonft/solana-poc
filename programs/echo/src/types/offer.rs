@@ -1,9 +1,9 @@
 use crate::{Address, OfferId, OfferItems, OfferState};
 
 pub struct Offer {
-    pub id: OfferId,       // 32
-    pub sender: Address,   // 44
-    pub receiver: Address, // 44
+    pub id: OfferId,
+    pub sender: Address,
+    pub receiver: Address,
     pub sender_items: OfferItems,
     pub receiver_items: OfferItems,
     pub expiration: i64,
