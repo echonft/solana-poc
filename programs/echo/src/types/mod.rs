@@ -1,17 +1,15 @@
-pub use address::*;
-pub use message::*;
-pub use offer::*;
-pub use offer_accepted_message::*;
-pub use offer_canceled_message::*;
-pub use offer_created_message::*;
-pub use offer_id::*;
-pub use offer_item::*;
-pub use offer_items::*;
-pub use token_id::*;
+pub(crate) use address::*;
+pub(crate) use message::*;
+pub(crate) use offer_accepted_message::*;
+pub(crate) use offer_canceled_message::*;
+pub(crate) use offer_created_message::*;
+pub(crate) use offer_id::*;
+pub(crate) use offer_item::*;
+pub(crate) use offer_items::*;
+pub(crate) use token_id::*;
 
 pub mod address;
 pub mod message;
-pub mod offer;
 pub mod offer_accepted_message;
 pub mod offer_canceled_message;
 pub mod offer_created_message;

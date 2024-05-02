@@ -1,4 +1,4 @@
-use crate::{program_accounts::escrow_authority::EscrowAuthority, program_accounts::offer::Offer};
+use crate::{program_accounts::Offer, EscrowAuthority};
 use anchor_lang::prelude::*;
 use anchor_spl::associated_token::{AssociatedToken, ID as SPL_ASSOCIATED_TOKEN_PROGRAM_ID};
 use anchor_spl::token::spl_token::ID as SPL_TOKEN_PROGRAM_ID;

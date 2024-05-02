@@ -1,6 +1,6 @@
 use crate::{
     error::EchoError,
-    program_accounts::{Config, ForeignEmitter, Received, WormholeEmitter},
+    program_accounts::{Config, ForeignEmitter, Received},
     types::Message,
 };
 use anchor_lang::prelude::*;
@@ -12,7 +12,6 @@ pub struct ReceiveMessageContext<'info> {
     #[account(mut)]
     /// Payer will initialize an account that tracks his own message IDs.
     pub payer: Signer<'info>,
-
     #[account(
     seeds = [Config::SEED_PREFIX],
     bump,
@@ -20,10 +19,8 @@ pub struct ReceiveMessageContext<'info> {
     /// Config account. Wormhole PDAs specified in the config are checked
     /// against the Wormhole accounts in this context. Read-only.
     pub config: Account<'info, Config>,
-
     // Wormhole program.
     pub wormhole_program: Program<'info, wormhole::program::Wormhole>,
-
     #[account(
     seeds = [
     wormhole::SEED_PREFIX_POSTED_VAA,
@@ -35,7 +32,6 @@ pub struct ReceiveMessageContext<'info> {
     /// Verified Wormhole message account. The Wormhole program verified
     /// signatures and posted the account data here. Read-only.
     pub posted: Account<'info, wormhole::PostedVaa<Message>>,
-
     #[account(
     seeds = [
     ForeignEmitter::SEED_PREFIX,
@@ -48,7 +44,6 @@ pub struct ReceiveMessageContext<'info> {
     /// agree with the one we have registered for this message's `emitter_chain`
     /// (chain ID). Read-only.
     pub foreign_emitter: Account<'info, ForeignEmitter>,
-
     #[account(
     init,
     payer = payer,
@@ -65,7 +60,6 @@ pub struct ReceiveMessageContext<'info> {
     /// This account cannot be overwritten, and will prevent Wormhole message
     /// replay with the same sequence.
     pub received: Account<'info, Received>,
-
     /// System program.
     pub system_program: Program<'info, System>,
 }

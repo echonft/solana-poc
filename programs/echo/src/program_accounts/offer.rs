@@ -10,5 +10,6 @@ pub struct Offer {
     pub receiver_token_mint: Pubkey,
     pub state: OfferState,
     // TODO add expiration date
+    // pub expiration: i64,
     pub bump: u8,
 }

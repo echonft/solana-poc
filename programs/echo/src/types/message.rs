@@ -1,5 +1,5 @@
 use crate::{OfferAcceptedMessage, OfferCanceledMessage, OfferCreatedMessage, MESSAGE_MAX_LENGTH};
-use anchor_lang::{prelude::Pubkey, AnchorDeserialize, AnchorSerialize};
+use anchor_lang::{AnchorDeserialize, AnchorSerialize};
 use std::io;
 use std::io::{Cursor, Read};
 
@@ -7,7 +7,8 @@ const PAYLOAD_ID_OFFER_CREATED: u8 = 1;
 const PAYLOAD_ID_OFFER_ACCEPTED: u8 = 2;
 const PAYLOAD_ID_OFFER_CANCELED: u8 = 3;
 
-#[derive(Clone)]
+// TODO change this to a struct with payload
+#[derive(Clone, Debug)]
 pub enum Message {
     OfferAccepted { message: OfferAcceptedMessage },
     OfferCanceled { message: OfferCanceledMessage },

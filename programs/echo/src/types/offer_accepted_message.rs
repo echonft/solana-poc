@@ -1,8 +1,9 @@
 use crate::OfferId;
 use anchor_lang::{AnchorDeserialize, AnchorSerialize};
+use std::fmt::Debug;
 use std::io;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct OfferAcceptedMessage {
     pub id: OfferId,
 }
@@ -19,3 +20,9 @@ impl AnchorDeserialize for OfferAcceptedMessage {
         Ok(OfferAcceptedMessage { id })
     }
 }
+
+// impl fmt::Display for OfferAcceptedMessage {
+//     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+//         write!(f, "(offer_id: {})", &self.id.fmt(f))
+//     }
+// }

@@ -1,8 +1,9 @@
 use crate::OfferId;
 use anchor_lang::{AnchorDeserialize, AnchorSerialize};
+use std::fmt::Debug;
 use std::io;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct OfferCanceledMessage {
     pub id: OfferId,
 }

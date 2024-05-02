@@ -3,7 +3,7 @@ use anchor_lang::{AnchorDeserialize, AnchorSerialize};
 use std::io;
 use std::io::{Read, Write};
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct OfferCreatedMessage {
     pub id: OfferId,
     pub sender: Address,
@@ -73,10 +73,10 @@ impl AnchorDeserialize for OfferCreatedMessage {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::io::Cursor;
+    use crate::OfferItem;
     use anchor_lang::prelude::*;
     use ethereum_types::H160;
-    use crate::{OfferItem};
+    use std::io::Cursor;
 
     #[test]
     fn serialize_deserialize_offer_created_message() {
@@ -125,7 +125,9 @@ mod tests {
 
         // Serialize the offer created message
         let mut serialized_data = Vec::new();
-        offer_created_message.serialize(&mut serialized_data).unwrap();
+        offer_created_message
+            .serialize(&mut serialized_data)
+            .unwrap();
 
         // Deserialize the offer created message
         let mut cursor = Cursor::new(&serialized_data);
@@ -133,22 +135,46 @@ mod tests {
             OfferCreatedMessage::deserialize_reader(&mut cursor).unwrap();
 
         // Check if the deserialized offer created message matches the original one
-        assert_eq!(offer_created_message.id, deserialized_offer_created_message.id);
-        assert_eq!(offer_created_message.sender, deserialized_offer_created_message.sender);
-        assert_eq!(offer_created_message.receiver, deserialized_offer_created_message.receiver);
+        assert_eq!(
+            offer_created_message.id,
+            deserialized_offer_created_message.id
+        );
+        assert_eq!(
+            offer_created_message.sender,
+            deserialized_offer_created_message.sender
+        );
+        assert_eq!(
+            offer_created_message.receiver,
+            deserialized_offer_created_message.receiver
+        );
 
         // Sender items
         for i in 0..offer_created_message.sender_items.items.len() {
-            assert_eq!(offer_created_message.sender_items.items[i].address, deserialized_offer_created_message.sender_items.items[i].address);
-            assert_eq!(offer_created_message.sender_items.items[i].token_id, deserialized_offer_created_message.sender_items.items[i].token_id);
+            assert_eq!(
+                offer_created_message.sender_items.items[i].address,
+                deserialized_offer_created_message.sender_items.items[i].address
+            );
+            assert_eq!(
+                offer_created_message.sender_items.items[i].token_id,
+                deserialized_offer_created_message.sender_items.items[i].token_id
+            );
         }
 
         // Receiver items
         for i in 0..offer_created_message.receiver_items.items.len() {
-            assert_eq!(offer_created_message.receiver_items.items[i].address, deserialized_offer_created_message.receiver_items.items[i].address);
-            assert_eq!(offer_created_message.receiver_items.items[i].token_id, deserialized_offer_created_message.receiver_items.items[i].token_id);
+            assert_eq!(
+                offer_created_message.receiver_items.items[i].address,
+                deserialized_offer_created_message.receiver_items.items[i].address
+            );
+            assert_eq!(
+                offer_created_message.receiver_items.items[i].token_id,
+                deserialized_offer_created_message.receiver_items.items[i].token_id
+            );
         }
 
-        assert_eq!(offer_created_message.expiration, deserialized_offer_created_message.expiration);
+        assert_eq!(
+            offer_created_message.expiration,
+            deserialized_offer_created_message.expiration
+        );
     }
 }

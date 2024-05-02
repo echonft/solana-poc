@@ -3,7 +3,7 @@ use anchor_lang::{AnchorDeserialize, AnchorSerialize};
 use std::io;
 use std::io::{Read, Write};
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct OfferItems {
     pub count: u8,
     pub items: Vec<OfferItem>,
@@ -68,10 +68,10 @@ impl AnchorDeserialize for OfferItems {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::Address;
     use anchor_lang::prelude::*;
-    use std::io::Cursor;
     use ethereum_types::H160;
-    use crate::{Address};
+    use std::io::Cursor;
 
     #[test]
     fn serialize_deserialize_offer_items() {
@@ -108,10 +108,19 @@ mod tests {
 
         // Ensure the deserialized offer items match the original ones
         assert_eq!(offer_items.count, deserialized_offer_items.count);
-        assert_eq!(offer_items.items.len(), deserialized_offer_items.items.len());
+        assert_eq!(
+            offer_items.items.len(),
+            deserialized_offer_items.items.len()
+        );
         for i in 0..offer_items.items.len() {
-            assert_eq!(offer_items.items[i].address, deserialized_offer_items.items[i].address);
-            assert_eq!(offer_items.items[i].token_id, deserialized_offer_items.items[i].token_id);
+            assert_eq!(
+                offer_items.items[i].address,
+                deserialized_offer_items.items[i].address
+            );
+            assert_eq!(
+                offer_items.items[i].token_id,
+                deserialized_offer_items.items[i].token_id
+            );
         }
     }
 
@@ -140,7 +149,6 @@ mod tests {
         // Ensure an error is returned due to zero count
         assert!(result.is_err());
     }
-
 
     #[test]
     fn deserialize_offer_items_with_zero_count() {

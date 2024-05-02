@@ -1,5 +1,4 @@
 use anchor_lang::prelude::error_code;
-use std::error;
 
 #[error_code]
 pub enum EchoError {

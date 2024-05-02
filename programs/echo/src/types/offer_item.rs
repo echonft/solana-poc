@@ -3,7 +3,7 @@ use anchor_lang::{AnchorDeserialize, AnchorSerialize};
 use std::io;
 use std::io::{Read, Write};
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct OfferItem {
     pub address: Address,
     pub token_id: TokenId,
@@ -56,8 +56,8 @@ impl AnchorDeserialize for OfferItem {
 mod tests {
     use super::*;
     use anchor_lang::prelude::*;
-    use std::io::{Cursor};
     use ethereum_types::H160;
+    use std::io::Cursor;
 
     #[test]
     fn test_offer_item_serialization_deserialization_solana() {
@@ -82,12 +82,18 @@ mod tests {
         let deserialized_offer_item = OfferItem::deserialize_reader(&mut cursor).unwrap();
 
         // Ensure the deserialized offer item matches the original one
-        assert_eq!(deserialized_offer_item.address.chain_id, offer_item.address.chain_id);
+        assert_eq!(
+            deserialized_offer_item.address.chain_id,
+            offer_item.address.chain_id
+        );
         assert_eq!(
             deserialized_offer_item.address.solana_address,
             offer_item.address.solana_address
         );
-        assert_eq!(deserialized_offer_item.address.eth_address, offer_item.address.eth_address);
+        assert_eq!(
+            deserialized_offer_item.address.eth_address,
+            offer_item.address.eth_address
+        );
         assert_eq!(deserialized_offer_item.token_id, offer_item.token_id);
     }
 
@@ -114,12 +120,18 @@ mod tests {
         let deserialized_offer_item = OfferItem::deserialize_reader(&mut cursor).unwrap();
 
         // Ensure the deserialized offer item matches the original one
-        assert_eq!(deserialized_offer_item.address.chain_id, offer_item.address.chain_id);
+        assert_eq!(
+            deserialized_offer_item.address.chain_id,
+            offer_item.address.chain_id
+        );
         assert_eq!(
             deserialized_offer_item.address.solana_address,
             offer_item.address.solana_address
         );
-        assert_eq!(deserialized_offer_item.address.eth_address, offer_item.address.eth_address);
+        assert_eq!(
+            deserialized_offer_item.address.eth_address,
+            offer_item.address.eth_address
+        );
         assert_eq!(deserialized_offer_item.token_id, offer_item.token_id);
     }
 
@@ -148,12 +160,18 @@ mod tests {
         let deserialized_offer_item = OfferItem::deserialize_reader(&mut cursor).unwrap();
 
         // Ensure the deserialized offer item matches the original one
-        assert_eq!(deserialized_offer_item.address.chain_id, offer_item.address.chain_id);
+        assert_eq!(
+            deserialized_offer_item.address.chain_id,
+            offer_item.address.chain_id
+        );
         assert_eq!(
             deserialized_offer_item.address.solana_address,
             offer_item.address.solana_address
         );
-        assert_eq!(deserialized_offer_item.address.eth_address, offer_item.address.eth_address);
+        assert_eq!(
+            deserialized_offer_item.address.eth_address,
+            offer_item.address.eth_address
+        );
         assert_eq!(deserialized_offer_item.token_id, offer_item.token_id);
     }
 

@@ -23,10 +23,8 @@ pub fn register_emitter(
         chain > 0 && chain != wormhole::CHAIN_ID_SOLANA && !address.iter().all(|&x| x == 0),
         EchoError::InvalidForeignEmitter,
     );
-
     let emitter = &mut ctx.accounts.foreign_emitter;
     emitter.chain = chain;
     emitter.address = address;
-
     Ok(())
 }

@@ -1,10 +1,8 @@
 use crate::{
     error::EchoError,
-    program_accounts::{Config, ForeignEmitter, Received, WormholeEmitter},
-    types::Message,
+    program_accounts::{Config, ForeignEmitter},
 };
 use anchor_lang::prelude::*;
-use wormhole_anchor_sdk::wormhole;
 
 #[derive(Accounts)]
 #[instruction(chain: u16)]
@@ -13,7 +11,6 @@ pub struct RegisterEmitterContext<'info> {
     /// Owner of the program set in the [`Config`] account. Signer for creating
     /// the [`ForeignEmitter`] account.
     pub owner: Signer<'info>,
-
     #[account(
     has_one = owner @ EchoError::OwnerOnly,
     seeds = [Config::SEED_PREFIX],
@@ -22,7 +19,6 @@ pub struct RegisterEmitterContext<'info> {
     /// Config account. This program requires that the `owner` specified in the
     /// context equals the pubkey specified in this account. Read-only.
     pub config: Account<'info, Config>,
-
     #[account(
     init_if_needed,
     payer = owner,
@@ -37,7 +33,6 @@ pub struct RegisterEmitterContext<'info> {
     /// registered yet for this Wormhole chain ID. If there already is an
     /// emitter address saved in this account, overwrite it.
     pub foreign_emitter: Account<'info, ForeignEmitter>,
-
     /// System program.
     pub system_program: Program<'info, System>,
 }
