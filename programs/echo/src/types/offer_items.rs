@@ -3,6 +3,7 @@ use anchor_lang::{AnchorDeserialize, AnchorSerialize};
 use std::io;
 use std::io::{Read, Write};
 
+#[derive(Clone)]
 pub struct OfferItems {
     pub count: u8,
     pub items: Vec<OfferItem>,

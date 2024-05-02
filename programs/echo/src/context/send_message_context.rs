@@ -1,10 +1,11 @@
+use anchor_lang::prelude::*;
+use wormhole_anchor_sdk::wormhole;
+
 use crate::{
     constants::SEED_PREFIX_SENT,
     error::EchoError,
-    program_accounts::{Config, ForeignEmitter, Received, WormholeEmitter},
+    program_accounts::{Config, WormholeEmitter},
 };
-use anchor_lang::prelude::*;
-use wormhole_anchor_sdk::wormhole;
 
 #[derive(Accounts)]
 pub struct SendMessageContext<'info> {

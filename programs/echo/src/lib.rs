@@ -4,7 +4,6 @@ pub use context::*;
 pub use enums::*;
 pub use error::*;
 pub use instructions::*;
-pub use message::*;
 pub use program_accounts::*;
 pub use types::*;
 
@@ -13,8 +12,8 @@ pub mod context;
 pub mod enums;
 pub mod error;
 pub mod instructions;
-pub mod message;
 pub mod program_accounts;
+
 pub mod types;
 
 declare_id!("Gzq13nAmkDZMgFjKs8Zd6jJbXE2X6iJJ4FEe2BqWcVWM");

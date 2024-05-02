@@ -1,4 +1,5 @@
 pub use address::*;
+pub use message::*;
 pub use offer::*;
 pub use offer_accepted_message::*;
 pub use offer_canceled_message::*;
@@ -9,6 +10,7 @@ pub use offer_items::*;
 pub use token_id::*;
 
 pub mod address;
+pub mod message;
 pub mod offer;
 pub mod offer_accepted_message;
 pub mod offer_canceled_message;

@@ -3,6 +3,7 @@ use anchor_lang::{AnchorDeserialize, AnchorSerialize};
 use std::io;
 use std::io::{Read, Write};
 
+#[derive(Clone)]
 pub struct OfferCreatedMessage {
     pub id: OfferId,
     pub sender: Address,

@@ -1,7 +1,7 @@
 use crate::{
     error::EchoError,
-    message::Message,
     program_accounts::{Config, ForeignEmitter, Received, WormholeEmitter},
+    types::Message,
 };
 use anchor_lang::prelude::*;
 use wormhole_anchor_sdk::wormhole;

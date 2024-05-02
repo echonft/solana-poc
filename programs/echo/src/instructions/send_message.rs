@@ -1,4 +1,4 @@
-use crate::{Message, SendMessageContext, SEED_PREFIX_SENT};
+use crate::{Message, OfferAcceptedMessage, SendMessageContext, SEED_PREFIX_SENT};
 use anchor_lang::prelude::*;
 use wormhole_anchor_sdk::wormhole;
 
@@ -37,35 +37,38 @@ pub fn send_message(ctx: Context<SendMessageContext>, message: Vec<u8>) -> Resul
 
     // There is only one type of message that this example uses to
     // communicate with its foreign counterparts (payload ID == 1).
-    let payload: Vec<u8> = Message::Hello { message }.try_to_vec()?;
-
-    wormhole::post_message(
-        CpiContext::new_with_signer(
-            ctx.accounts.wormhole_program.to_account_info(),
-            wormhole::PostMessage {
-                config: ctx.accounts.wormhole_bridge.to_account_info(),
-                message: ctx.accounts.wormhole_message.to_account_info(),
-                emitter: wormhole_emitter.to_account_info(),
-                sequence: ctx.accounts.wormhole_sequence.to_account_info(),
-                payer: ctx.accounts.payer.to_account_info(),
-                fee_collector: ctx.accounts.wormhole_fee_collector.to_account_info(),
-                clock: ctx.accounts.clock.to_account_info(),
-                rent: ctx.accounts.rent.to_account_info(),
-                system_program: ctx.accounts.system_program.to_account_info(),
-            },
-            &[
-                &[
-                    SEED_PREFIX_SENT,
-                    &ctx.accounts.wormhole_sequence.next_value().to_be_bytes()[..],
-                    &[ctx.bumps.wormhole_message],
-                ],
-                &[wormhole::SEED_PREFIX_EMITTER, &[wormhole_emitter.bump]],
-            ],
-        ),
-        config.batch_id,
-        payload,
-        config.finality.try_into().unwrap(),
-    )?;
+    // let payload: Vec<u8> = Message::Alive {
+    //     message: Pubkey::new_unique(),
+    // }
+    // .try_to_vec()?;
+    //
+    // wormhole::post_message(
+    //     CpiContext::new_with_signer(
+    //         ctx.accounts.wormhole_program.to_account_info(),
+    //         wormhole::PostMessage {
+    //             config: ctx.accounts.wormhole_bridge.to_account_info(),
+    //             message: ctx.accounts.wormhole_message.to_account_info(),
+    //             emitter: wormhole_emitter.to_account_info(),
+    //             sequence: ctx.accounts.wormhole_sequence.to_account_info(),
+    //             payer: ctx.accounts.payer.to_account_info(),
+    //             fee_collector: ctx.accounts.wormhole_fee_collector.to_account_info(),
+    //             clock: ctx.accounts.clock.to_account_info(),
+    //             rent: ctx.accounts.rent.to_account_info(),
+    //             system_program: ctx.accounts.system_program.to_account_info(),
+    //         },
+    //         &[
+    //             &[
+    //                 SEED_PREFIX_SENT,
+    //                 &ctx.accounts.wormhole_sequence.next_value().to_be_bytes()[..],
+    //                 &[ctx.bumps.wormhole_message],
+    //             ],
+    //             &[wormhole::SEED_PREFIX_EMITTER, &[wormhole_emitter.bump]],
+    //         ],
+    //     ),
+    //     config.batch_id,
+    //     payload,
+    //     config.finality.try_into().unwrap(),
+    // )?;
 
     Ok(())
 }
