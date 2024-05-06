@@ -1,24 +1,36 @@
 {
+  "type": "module",
   "scripts": {
     "anchor:deploy": "anchor build && anchor deploy",
-    "generate-client": "node kinobi",
+    "generate-client": "tsx kinobi.ts",
+    "lint": "eslint --fix -c .eslintrc.cjs --ext .ts .",
+    "modules:remove": "rm -rf node_modules",
+    "modules:update": "ncu -u",
+    "modules:update-minor": "ncu -u --target=minor",
     "sdk:deploy": "pnpm sdk:update && pnpm anchor:deploy",
-    "sdk:update": "anchor build && node kinobi && source .env && rm -rf ${PROJECTS_DIR}/echo/lib/solana/src/types/sdk && cp -R target/sdk ${PROJECTS_DIR}/echo/lib/solana/src/types/",
-    "lint:fix": "prettier */*.js \"*/**/*{.js,.ts}\" -w",
-    "lint": "prettier */*.js \"*/**/*{.js,.ts}\" --check"
-  },
-  "dependencies": {
-    "@coral-xyz/anchor": "^0.29.0"
+    "sdk:update": "anchor build && node kinobi && source .env && rm -rf ${PROJECTS_DIR}/echo/lib/solana/src/types/sdk && cp -R target/sdk ${PROJECTS_DIR}/echo/lib/solana/src/types/"
   },
   "devDependencies": {
-    "@metaplex-foundation/kinobi": "0.18.2",
-    "chai": "^4.3.4",
-    "mocha": "^9.0.3",
-    "ts-mocha": "^10.0.0",
-    "@types/bn.js": "^5.1.0",
-    "@types/chai": "^4.3.0",
-    "@types/mocha": "^9.0.0",
-    "typescript": "^4.3.5",
-    "prettier": "^2.6.2"
+    "@certusone/wormhole-sdk": "0.10.15",
+    "@coral-xyz/anchor": "0.29.0",
+    "@metaplex-foundation/kinobi": "0.19.2",
+    "@rvagg/chai-as-promised": "8.0.2",
+    "@solana/web3.js": "1.91.8",
+    "@types/bn.js": "5.1.5",
+    "@types/chai": "4.3.15",
+    "@types/mocha": "10.0.6",
+    "@types/ramda": "0.30.0",
+    "@typescript-eslint/eslint-plugin": "7.8.0",
+    "@typescript-eslint/parser": "7.8.0",
+    "chai": "5.1.0",
+    "eslint": "8.57.0",
+    "eslint-import-resolver-typescript": "3.6.1",
+    "eslint-plugin-import": "2.29.1",
+    "mocha": "10.4.0",
+    "npm-check-updates": "16.14.20",
+    "ramda": "0.30.0",
+    "ts-mocha": "10.0.0",
+    "tsx": "4.9.0",
+    "typescript": "5.4.5"
   }
 }

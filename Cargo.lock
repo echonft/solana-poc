@@ -896,7 +896,7 @@ version = "0.1.0"
 dependencies = [
  "anchor-lang",
  "anchor-spl",
- "ethereum-types",
+ "ethereum-types-solana",
  "mpl-token-metadata",
  "solana-program",
  "wormhole-anchor-sdk",
@@ -976,16 +976,16 @@ dependencies = [
 ]
 
 [[package]]
-name = "ethereum-types"
-version = "0.14.1"
+name = "ethereum-types-solana"
+version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "02d215cbf040552efcbe99a38372fe80ab9d00268e20012b79fcd0f073edd8ee"
+checksum = "6441cf82759d5e76bbcd60c1c954888868d6d8d3c3e729d27e929b2c1838dceb"
 dependencies = [
  "ethbloom",
  "fixed-hash",
  "impl-rlp",
  "impl-serde",
- "primitive-types",
+ "primitive-types-solana",
  "uint",
 ]
 
@@ -1571,10 +1571,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5b40af805b3121feab8a3c29f04d8ad262fa8e0561883e7653e024ae4479e6de"
 
 [[package]]
-name = "primitive-types"
-version = "0.12.2"
+name = "primitive-types-solana"
+version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0b34d9fd68ae0b74a41b21c03c2f62847aa0ffea044eee893b4c140b37e244e2"
+checksum = "37c97cff0ee8e231f089afc38ec6d6c39470709cccb9888b564b7f41abd1b130"
 dependencies = [
  "fixed-hash",
  "impl-codec",

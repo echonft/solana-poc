@@ -75,7 +75,7 @@ mod tests {
     use super::*;
     use crate::OfferItem;
     use anchor_lang::prelude::*;
-    use ethereum_types::H160;
+    use ethereum_types_solana::H160;
     use std::io::Cursor;
 
     #[test]

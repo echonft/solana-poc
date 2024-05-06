@@ -21,15 +21,18 @@ test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
 
 [test]
 startup_wait = 10000
+shutdown_wait = 2000
+upgradeable = false
 
 [test.validator]
+bind_address = "0.0.0.0"
 url = "https://api.mainnet-beta.solana.com"
+ledger = ".anchor/test-ledger"
+rpc_port = 8899
 
 [workspace]
 resolver = "2"
-members = [
-  "programs/echo",
-]
+members = ["programs/echo"]
 
 ### MPL Token Metadata
 [[test.validator.clone]]

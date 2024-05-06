@@ -3,6 +3,7 @@ use anchor_lang::prelude::*;
 use anchor_lang::solana_program::pubkey::Pubkey;
 
 #[account]
+#[derive(Default)]
 pub struct Offer {
     pub sender: Pubkey,
     pub receiver: Pubkey,

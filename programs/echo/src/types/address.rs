@@ -1,5 +1,5 @@
 use anchor_lang::prelude::*;
-use ethereum_types::H160;
+use ethereum_types_solana::H160;
 use std::io;
 use std::io::{Read, Write};
 use wormhole_anchor_sdk::wormhole::constants::CHAIN_ID_SOLANA;
@@ -8,7 +8,7 @@ use wormhole_anchor_sdk::wormhole::constants::CHAIN_ID_SOLANA;
 pub struct Address {
     pub chain_id: u16,
     pub solana_address: Option<Pubkey>,
-    pub eth_address: Option<ethereum_types::Address>,
+    pub eth_address: Option<ethereum_types_solana::Address>,
 }
 
 pub const ADDRESS_SERIALIZED_SIZE: usize = 34;
@@ -86,7 +86,7 @@ impl AnchorDeserialize for Address {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::io::{Cursor};
+    use std::io::Cursor;
 
     #[test]
     fn test_address_serialization_deserialization_solana() {
